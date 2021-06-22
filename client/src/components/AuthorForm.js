@@ -11,12 +11,10 @@ const AuthorForm = (props) => {
   // ----------------------------------
 
   // i) Lifting States
-  const {formType} = props;
+  const {formType, author, setAuthor} = props;
 
   // ii) React Hooks - States
-  const [author, setAuthor] = useState({
-    name: ''
-  });
+  
   const [errorMessages, setErrorMessages] = useState({
     name: ''
   });

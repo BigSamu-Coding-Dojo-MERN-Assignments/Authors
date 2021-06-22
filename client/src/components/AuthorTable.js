@@ -15,14 +15,11 @@ const AuthorTable = (props) => {
 
   // ii) React Hooks - States
   const [authorsList, setAuthorsList] = useState([]);
-
+  
   // iii) React Hooks - Effects
 
   useEffect(()=>{
-   
       getAllAuthors();
- 
-    
   },[])
 
   //-----------------------------------
@@ -31,9 +28,8 @@ const AuthorTable = (props) => {
 
   const getAllAuthors = async () => {
     await axios.get('http://localhost:8000/api/authors')
-    .then(res=>{
-        console.log(res.data)
-        setAuthorsList(res.data);
+    .then(res=>{  
+      setAuthorsList(_.orderBy(res.data,['name'],['asc']));
     }); 
   }
 
