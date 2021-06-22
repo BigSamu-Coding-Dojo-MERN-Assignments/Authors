@@ -1,6 +1,8 @@
 import React, {useState, useEffect} from 'react'
 import {Link, useParams, useHistory} from "react-router-dom";
+
 import axios from 'axios';
+import _ from 'lodash';
 
 const AuthorForm = (props) => {
 
@@ -13,6 +15,9 @@ const AuthorForm = (props) => {
 
   // ii) React Hooks - States
   const [author, setAuthor] = useState({
+    name: ''
+  });
+  const [errorMessages, setErrorMessages] = useState({
     name: ''
   });
 
@@ -44,7 +49,17 @@ const AuthorForm = (props) => {
         console.log("Response: ", res)
         history.push("/")
       })
-      .catch(err=>console.log("Error: ", err))
+      .catch(err=>{
+        console.log("Error: ", err)
+        let errors = err.response.data.errors;
+        _.keys(errors).map((errorType, index) => 
+          setErrorMessages({
+            ...errorMessages,
+            [errorType]: errors[errorType].message
+          })
+        )
+      
+      })
   }
 
   const updateAuthor = async (author) => {
@@ -59,10 +74,10 @@ const AuthorForm = (props) => {
   // ii) Handlers
   const onChangeHandler = (e) => {
     console.log(e.target.value)
-    setAuthor({...author,
-        [e.target.name]: e.target.value}
-    );
-
+    setAuthor({
+      ...author,
+      [e.target.name]: e.target.value
+    });
   };
   
   const onSubmitHandler = (e) => {
@@ -102,6 +117,9 @@ const AuthorForm = (props) => {
                 value={author.name}
                 onChange={ onChangeHandler }
               />
+              {(_.has(errorMessages, 'name')) &&
+                <div className = "text-danger small">{errorMessages.name}</div>
+              }
             </div>
           </div>
           <div className="row justify-content-center">
